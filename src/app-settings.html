@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Letterbox Settings</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://cdn.streamlabs.com/slobs-platform/lib/streamlabs-platform.min.js"></script>
+        <script src="/js/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div class="app-settings">
+            <div class="settings-container">
+                <div class="title">letterbox settings</div>
+                <div class="settings-group">
+                    <div class="setting">
+                        <div class="setting-label">
+                            <label for="bar_speed">Bar Speed</label>
+                        </div>
+                        <div class="setting-input">
+                            <select name="bar_speed" id="bar_speed">
+                                <option value="slow">Slow</option>
+                                <option value="normal">Normal</option>
+                                <option value="fast">Fast</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="setting">
+                        <div class="setting-label">
+                            <label for="bar_height">Bar Height</label>
+                        </div>
+                        <div class="setting-input">
+                            <div id="bar_height_display" class="range_display">0</div>
+                            <input type="range" min="0" max="50" value="0" class="slider" id="bar_height">
+                        </div>
+                    </div>
+                    <div class="setting">
+                        <div class="setting-label">
+                            <label for="bar_color">Bar Color</label>
+                        </div>
+                        <div class="setting-input">
+                            <input type="color" id="bar_color" name="bar_color" value="#ffffff">
+                        </div>
+                    </div>
+                    <div class="save-settings">
+                        <div class="button save">
+                            <p>Save</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function() {
+                const streamlabs = window.Streamlabs;
+                streamlabs.init({ receiveEvents: true })
+                .then(data => {
+                    console.log('auth completed for ' + data.profiles.twitch.display_name);
+                });
+
+                // load user settings
+                window.Streamlabs.userSettings.get('userSettings')
+                .then(user_settings => {
+                    $("option:selected", "select#bar_speed").val(user_settings["speed"]);
+                    $("input#bar_height").val(user_settings["height"]);
+                    $("div#bar_height_display").html(user_settings["height"] + "%");
+                    $("input#bar_color").val(user_settings["color"]);
+                    $("div#bar_increment_display").html( user_settings["height_increment"] + "%");
+                    console.log('Settings loaded: ' + JSON.stringify(user_settings))
+                });
+
+                $("input#bar_height").on("change", function() {
+                    $("div#bar_height_display").html( $(this).val() + "%");
+                });
+
+                $("input#bar_hotkey_increment").on("change", function() {
+                    $("div#bar_increment_display").html( $(this).val() + "%");
+                });
+
+                $("div.button.save").on("click", function() {
+                    var barSpeed = "";
+                    var speedOption = $("option:selected", "select#bar_speed").val();
+                    if (speedOption == "slow") {
+                        barSpeed = "3000ms";
+                    } else if (speedOption == "normal") {
+                        barSpeed = "1000ms";
+                    } else if (speedOption == "fast") {
+                        barSpeed = "100ms";
+                    }
+                    var userSettings = {
+                        "speed": barSpeed,
+                        "height": $("input#bar_height").val() + "%",
+                        "color": $("input#bar_color").val(),
+                        "increase_hotkey": $("input#bar_hotkey_increase").val(),
+                        "decrease_hotkey":  $("input#bar_hotkey_decrease").val(),
+                        "height_increment": $("input#bar_hotkey_increment").val() + "%"
+                    };
+                    streamlabs.postMessage('updateSettings', userSettings);
+                    window.Streamlabs.userSettings.set('userSettings', userSettings)
+                    .then(() => console.log("Settings updated to: " + JSON.stringify(userSettings)));
+                });
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,34 @@
+{
+    "version": "0.0.1",
+    "name": "Slykuiper Example App",
+    "permissions": ["slobs.hotkeys"],
+    "icon": "/img/app_icon.png",
+    "sources": [
+      {
+        "type": "browser_source",
+        "name": "Letterbox",
+        "id": "letterbox-app",
+        "about": {
+          "description": "Control a letterbox widget on your stream",
+          "bullets": ["Keywords from your chat", "Manual control settings"],
+          "bannerImage": "/img/app_bannerImage.png"
+        },
+        "file": "app.html",
+        "initialSize": {
+          "type": "relative",
+          "width": 1,
+          "height": 1
+        }
+      }
+    ],
+    "pages": [
+      {
+        "slot": "top_nav",
+        "file": "app-settings.html",
+        "popOutSize": {
+          "width": 800,
+          "height": 600
+        }
+      }
+    ]
+  }

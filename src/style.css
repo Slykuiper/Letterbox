@@ -1,0 +1,169 @@
+/* Global Settings */
+
+body {
+    margin: 0;
+    background-color: #161616;
+}
+
+* {
+    font-family: "Roboto", "sans-serif";
+    color: #ffffff;
+}
+
+.main {
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* App */
+.app {
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+#top {
+
+}
+
+#bottom {
+    top: 100%;
+    transform: rotate(180deg);
+}
+
+.rectangle {
+    position: absolute;
+    display: block;
+    width: 100%;
+    height: 0%;
+    transform-origin: 50% 0%;
+    background-color:#ffffff;
+    transition: all 1000ms;
+}
+
+/* APP SETTINGS */
+
+.app-settings {
+    display: block;
+    position: relative;
+    width: 100%;  
+}
+
+.settings-container {
+    display: block;
+    position: relative;
+    top: 50px;
+    width: 650px;
+    height: 700px;
+    background: #0F0F0F;
+    border-radius: 2em;
+    margin: auto;
+}
+
+.settings-group {
+    font-size: 14px;
+    padding-left: 50px;
+}
+
+.setting-input, .setting-label {
+    display: inline-block;
+}
+
+.setting {
+    display: block;
+    padding-bottom: 15px;
+}
+
+.setting-label {
+    width: 250px;
+}
+
+.title {
+    font-size: 64px;
+    font-weight: bold;
+    display: block;
+    position: relative;
+    width: 260px;
+    padding-top: 90px;
+    padding-bottom: 60px;
+    padding-left: 50px;
+}
+
+input, select {
+    width: 150px;
+}
+
+select {
+    margin-right: 1em;
+    padding-right: 2em;
+    background: #191919;
+    border: 0px;
+    color: #ffffff;
+    padding: 3px 0px 3px 13px;
+    border-radius: 0.5em;
+    cursor: pointer;
+}
+
+select:focus, .text_input {
+    outline: none;
+}
+
+input[type=range] {
+    -webkit-appearance: none;
+    height: 10px;
+    outline: none;
+    background: #191919;
+    border-radius: 1em;
+}
+
+input[type=range]:focus {
+    outline: none;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    background: #191919;
+    border: 2px solid #ffffff;
+    border-radius: 1em;
+    cursor: pointer;
+    height: 16px;
+    width: 16px;
+}
+
+input[type=color] {
+    background: #191919;
+}
+
+.text_input {
+    background: #191919;
+    padding: 3px 0px 3px 13px;
+    border-radius: 0.5em;
+    border: 0px;
+    width: 138px;
+}
+
+.range_display {
+    display: inline-block;
+    background: #191919;
+    padding: 0.1em 1em 0.1em 1em;
+    border-radius: 0.5em;
+    border: 0px;
+}
+
+.save-settings {
+    margin-top: 2em;
+    display: block;
+}
+
+.button {
+    display: inline-block;
+    padding: 0.5em;
+    background: #292929;
+    padding: 0.25em 4em 0.25em 4em;
+    border-radius: 0.5em;
+    border: 0px;
+    cursor: pointer;
+}

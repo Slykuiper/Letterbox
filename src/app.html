@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Letterbox App</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script src="https://cdn.streamlabs.com/slobs-platform/lib/streamlabs-platform.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <div id="letterbox" class="app">
+            <div id="top" class="rectangle"></div>
+            <div id="bottom" class="rectangle"></div>
+        </div>
+
+        <script>
+            const streamlabs = window.Streamlabs;
+            streamlabs.init({ receiveEvents: true })
+            .then(data => {
+                console.log('auth completed');
+                console.log(data);
+                //streamlabs.twitch.initTwitchChat({ nick: data.profiles.twitch.display_name, token: "oauth:" + data.token });
+                streamlabs.twitch.connectTwitchChatByName(data.profiles.twitch.display_name);
+            });
+
+            // load user settings
+            window.Streamlabs.userSettings.get('userSettings')
+            .then(user_settings => {
+                $("div.rectangle").css("transition", "all " + user_settings["speed"]);
+                $("div.rectangle").css("height", user_settings["height"]);
+                $("div.rectangle").css("background-color", user_settings["color"]);
+                console.log('Settings loaded: ' + JSON.stringify(user_settings))
+            });
+
+            // get user settings from Settings page
+            streamlabs.onMessage(event => {
+                switch(event.type) {
+                    case 'updateSettings':
+                        $("div.rectangle").css("transition", "all " + event.data["speed"]);
+                        $("div.rectangle").css("height", event.data["height"]);
+                        $("div.rectangle").css("background-color", event.data["color"]);
+                        console.log("Settings updated to " + JSON.stringify(event.data));
+                        break;
+                    default:
+                }
+            });
+
+            // fires when a user chats
+            streamlabs.onChatMessage(function(event) {
+
+                // receive a twitch message
+                if (event.payload.command == "PRIVMSG") {
+                    var message = event.body.split(" ");
+
+                    // if first word is !letterbox
+                    if (message[0] == "!letterbox") {
+
+                        // if second word is a hex code, change color. ie !letterbox #00ff00
+                        if (message[1].length == 7 && message[1].startsWith("#")) { 
+                            $("div.rectangle").css("background-color", message[1]);
+                        }
+
+                        // if second word includes a percentage between 0-50, change height. ie !letterbox 50%
+                        if (message[1].slice(-1) == "%") {
+                            if (message[1].slice(0, -1) > 0 && message[1].slice(0, -1) < 51) {
+                                $("div.rectangle").css("height", message[1]);
+                                console.log("Letterbox height set to " + message[1]);
+                            }
+                        }
+                        // if second word includes a "ms", change transition speed. ie !letterbox 300ms
+                        if (message[1].slice(-2) == "ms") {
+                            $("div.rectangle").css("transition", "all " + message[1]);
+                            console.log("Letterbox speed set to " + message[1]);
+                        }
+                    }
+                }
+            });
+
+            // fires when ANY user chats
+            streamlabs.onChatEvent(function(event) {
+                //console.log(event);
+                var currentHeight = $("div.rectangle").css("height");
+                
+            });
+        </script> 
+    </body>
+</html>
